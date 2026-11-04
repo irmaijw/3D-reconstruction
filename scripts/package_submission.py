@@ -1,11 +1,19 @@
 """Build the handout submission layout from an explicit source allowlist."""
 from pathlib import Path
 import hashlib
+import re
 import zipfile
 ROOT=Path(__file__).resolve().parents[1]
 OUTPUT=ROOT/'112006220_hw1.zip'
 
 def main():
+    # Catch altered binary PDFs before packaging (including broken xref offsets).
+    pdf=(ROOT/'112006220_hw1_report.pdf').read_bytes()
+    if not pdf.startswith(b'%PDF-') or b'%%EOF' not in pdf[-100:]:
+        raise ValueError('The final PDF header or EOF is invalid; regenerate it')
+    offset=int(pdf.rsplit(b'startxref',1)[1].split()[0])
+    if not (pdf[offset:].startswith(b'xref') or re.match(rb'\d+\s+\d+\s+obj\b',pdf[offset:])):
+        raise ValueError('The PDF cross-reference offset is invalid; regenerate it')
     files={}
     def include(path,archive_name=None):
         p=ROOT/path
