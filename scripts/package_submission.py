@@ -22,6 +22,7 @@ def main():
     for name in ['load.py','reconstruct.py','utils.py','api.py','plot.py','README.md','pixi.toml','pixi.lock','ontology/hw1.ttl']:
         include(name)
     include('112006220_hw1_report.pdf','report.pdf')
+    include('112006220_hw1_report.pdf')
     for directory in ['configs','docs','packages/simulator','tests']:
         for p in sorted((ROOT/directory).rglob('*')):
             if p.is_file() and not any(x.startswith('.') or x=='__pycache__' for x in p.relative_to(ROOT).parts) and p.suffix not in {'.pyc','.pyo'}:
@@ -34,7 +35,7 @@ def main():
     with zipfile.ZipFile(tmp) as z:
         assert z.testzip() is None
         assert {'load.py','reconstruct.py','utils.py','api.py','ontology/hw1.ttl','report.pdf','README.md'}<=set(z.namelist())
-        assert z.read('report.pdf')==(ROOT/'112006220_hw1_report.pdf').read_bytes()
+        assert z.read('report.pdf')==z.read('112006220_hw1_report.pdf')==(ROOT/'112006220_hw1_report.pdf').read_bytes()
         assert not any(n.startswith(('eval/','experiments/','replica_v1/','.pixi/','report_assets/')) for n in z.namelist())
     tmp.replace(OUTPUT)
     print(f'{OUTPUT.name}: {len(files)} files, {OUTPUT.stat().st_size:,} bytes')
