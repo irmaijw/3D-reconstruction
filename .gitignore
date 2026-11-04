@@ -1,0 +1,13 @@
+.pixi/
+.tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+eval/
+replica_v1/
+experiments/
+report_assets/
+*.zip
+*.building.pdf
+core
+core.*
